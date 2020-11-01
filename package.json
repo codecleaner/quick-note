@@ -1,0 +1,19 @@
+{
+  "name": "quick-note",
+  "version": "1.0.0",
+  "description": "A minimal quick note app",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "start:debug": "DEBUG=true electron ."
+  },
+  "keywords": ["quick", "note"],
+  "author": {
+    "name": "Wojtek Zieliński"
+  },
+  "license": "MIT License",
+  "devDependencies": {
+    "electron": "^10.1.5",
+    "electron-store": "^6.0.1"
+  }
+}
