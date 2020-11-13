@@ -22,15 +22,13 @@ const createMainWindow = () => {
     show: false,
     transparent: true,
     opacity: 0.95,
+    skipTaskbar: true,
     webPreferences: {
       nodeIntegration: true
     }
   });
+  mainWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
   mainWindow.loadFile('index.html');
-  mainWindow.on('blur', () => {
-    const areChildWindowsFocused = mainWindow.getChildWindows().reduce((prev, win) => prev || win.isFocused(), false);
-    !areChildWindowsFocused && mainWindow.hide()
-  });
   DEBUG_MODE && mainWindow.webContents.openDevTools();
   return mainWindow;
 };
