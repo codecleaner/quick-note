@@ -13,6 +13,7 @@ const createMainWindow = () => {
     width: 600,
     height: DEBUG_MODE ? 300 : 40,
     frame: false,
+    alwaysOnTop: true,
     resizable: DEBUG_MODE,
     minimizable: false,
     maximizable: false,

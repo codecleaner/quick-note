@@ -17,8 +17,11 @@ document.body.addEventListener('dblclick', () => {
 
 document.body.addEventListener('keyup', (e) => {
     if (e.key === 'Escape') {
-        e.target.value = '';
-        ipcRenderer.invoke('hide-window');
+        if (e.target.value.length > 0) {
+            e.target.value = '';
+        } else {
+            ipcRenderer.invoke('hide-window');
+        }
     }
 });
 
