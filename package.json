@@ -7,7 +7,7 @@
   "scripts": {
     "start": "electron .",
     "start:debug": "DEBUG=true electron .",
-    "pack": "npx electron-packager . --icon=\"./assets/icons/mac/quick-note.icns\" --overwrite"
+    "pack": "npx electron-packager . --icon=\"./assets/icons/mac/quick-note.icns\" --out=\"./build\" --overwrite"
   },
   "keywords": [
     "quick",
