@@ -14,7 +14,7 @@ const createMainWindow = () => {
     height: DEBUG_MODE ? 300 : 40,
     frame: false,
     alwaysOnTop: true,
-    resizable: DEBUG_MODE,
+    resizable: !!DEBUG_MODE,
     minimizable: false,
     maximizable: false,
     closable: false,
@@ -25,13 +25,14 @@ const createMainWindow = () => {
     opacity: 0.95,
     skipTaskbar: true,
     webPreferences: {
-      nodeIntegration: true
+      preload: path.join(__dirname, "preload.js"),
     }
   });
   mainWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
-  mainWindow.loadFile('index.html');
-  DEBUG_MODE && mainWindow.webContents.openDevTools();
-  return mainWindow;
+  return mainWindow.loadFile('index.html').then(() => {
+    DEBUG_MODE && mainWindow.webContents.openDevTools();
+    return mainWindow;
+  });
 };
 
 const createSettingsWindow = (mainWindow) => {
@@ -43,13 +44,13 @@ const createSettingsWindow = (mainWindow) => {
     height: 150,
     webPreferences: {
       nodeIntegration: true,
-      enableRemoteModule: true,
       preload: path.join(__dirname, 'settings-preload.js')
     }
   });
-  settingsWindow.loadFile('settings.html');
-  DEBUG_MODE && settingsWindow.webContents.openDevTools();
-  return settingsWindow;
+  return settingsWindow.loadFile('settings.html').then(() => {
+    DEBUG_MODE && settingsWindow.webContents.openDevTools();
+    return settingsWindow;
+  });
 };
 
 const registerGlobalFocusShortcut = mainWindow => {
@@ -63,10 +64,10 @@ const registerGlobalFocusShortcut = mainWindow => {
   console.log(`Global focus shortcut (${GLOBAL_FOCUS_SHORTCUT}) registration ${ret && globalShortcut.isRegistered(GLOBAL_FOCUS_SHORTCUT) ? 'succeeded.' : 'failed!'}`);
 };
 
-app.whenReady().then(() => {
-  const mainWindow = createMainWindow();
-  const settingsWindow = createSettingsWindow(mainWindow);
-  
+app.whenReady().then(async () => {
+  const mainWindow = await createMainWindow();
+  const settingsWindow = await createSettingsWindow(mainWindow);
+
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) createMainWindow()
   })
@@ -74,11 +75,14 @@ app.whenReady().then(() => {
 
   ipcMain.handle('create-note', (event, noteContent) => {
     console.log('create-note', noteContent);
-    const date = new Intl.DateTimeFormat('pl-PL', { dateStyle: 'short', timeStyle: 'short' }).format(new Date())
+    const date = new Intl.DateTimeFormat('pl-PL', {
+      dateStyle: 'short',
+      timeStyle: 'short'
+    }).format(new Date())
     const note = store.get('NOTE_FORMAT')
-        .replaceAll("{{date}}", date)
-        .replaceAll("{{note}}", noteContent)
-        .replaceAll("{{newLine}}", `\n`);
+      .replaceAll("{{date}}", date)
+      .replaceAll("{{note}}", noteContent)
+      .replaceAll("{{newLine}}", `\n`);
     fs.appendFileSync(store.get('OBSIDIAN_VAULT_FILE'), note);
   });
 

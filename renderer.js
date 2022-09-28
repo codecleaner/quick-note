@@ -1,30 +1,29 @@
-const { ipcRenderer } = require('electron');
-
 const noteField = document.getElementById('note');
 
-noteField.addEventListener('keyup', (e) => {
+noteField.addEventListener('keyup', async (e) => {
     console.log(e.key);
     if (e.key === 'Enter') {
-        ipcRenderer.invoke('create-note', e.target.value)
-            .then(() => ipcRenderer.invoke('hide-window'));
-
+        await window.api.createNote(e.target.value).then(() => {
+            noteField.value = '';
+            return window.api.hideWindow();
+      });
     }
 });
 
-document.body.addEventListener('dblclick', () => {
-    ipcRenderer.invoke('center-window');
+document.body.addEventListener('dblclick', async () => {
+    await window.api.centerWindow();
 });
 
-document.body.addEventListener('keyup', (e) => {
+document.body.addEventListener('keyup', async (e) => {
     if (e.key === 'Escape') {
-        if (e.target.value.length > 0) {
-            e.target.value = '';
+        if (noteField.value.length > 0) {
+            noteField.value = '';
         } else {
-            ipcRenderer.invoke('hide-window');
+            await window.api.hideWindow();
         }
     }
 });
 
-document.getElementById('settings').addEventListener('click', () => {
-    ipcRenderer.invoke('show-settings');
+document.getElementById('settings').addEventListener('click', async () => {
+    await window.api.showSettings();
 });
