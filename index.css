@@ -9,10 +9,11 @@ body {
 }
 input {
     width: 580px;
+    font-family: "Open Sans", sans-serif;
     font-size: 20px;
     border: none;
     height: 20px;
-    padding: 10px;
+    padding: 16px;
     vertical-align: middle;
     color: #303030;
 }
@@ -21,7 +22,7 @@ input:focus {
 }
 button#settings {
     position: absolute;
-    right: 0;
+    right: 4px;
     font-size: 10px;
     border: none;
     margin: 0;

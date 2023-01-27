@@ -4,13 +4,12 @@
     <meta charset="UTF-8">
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
     <title>Quick Note</title>
     <link rel="stylesheet" type="text/css" href="index.css" />
   </head>
   <body>
     <button id="settings">🛠</button>
-    <input type="text" id="note" autofocus placeholder="My quick note..." />
+    <input type="text" id="note" tabindex="1" aria-label="Quick note" autofocus placeholder="My quick note..." />
     <script src="./renderer.js"></script>
   </body>
 </html>

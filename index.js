@@ -11,7 +11,7 @@ const store = new Store({ defaults: configuration });
 const createMainWindow = () => {
   const mainWindow = new BrowserWindow({
     width: 600,
-    height: DEBUG_MODE ? 300 : 40,
+    height: DEBUG_MODE ? 300 : 52,
     frame: false,
     alwaysOnTop: true,
     resizable: !!DEBUG_MODE,
@@ -40,8 +40,8 @@ const createSettingsWindow = (mainWindow) => {
     parent: mainWindow,
     modal: !DEBUG_MODE,
     show: false,
-    width: 320,
-    height: 150,
+    width: 482,
+    height: 373,
     webPreferences: {
       nodeIntegration: true,
       preload: path.join(__dirname, 'settings-preload.js')

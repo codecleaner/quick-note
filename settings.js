@@ -10,3 +10,10 @@ document.getElementById('save').addEventListener('click', async () => {
 document.getElementById('cancel').addEventListener('click', async () => {
     await window.api.hideSettings();
 });
+
+document.body.addEventListener('keyup', async (e) => {
+    if (e.key === 'Escape') {
+        await window.api.hideSettings();
+    }
+});
+

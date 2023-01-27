@@ -1,24 +1,30 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
   <head>
     <meta charset="UTF-8">
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
     <title>Quick Note Settings</title>
     <link rel="stylesheet" type="text/css" href="settings.css" />
   </head>
   <body>
-    <div class="container">
-      <label for="OBSIDIAN_VAULT_FILE">Obsidian vault file:</label>
-      <input type="text" id="OBSIDIAN_VAULT_FILE" autofocus placeholder="File path" />
-      <label for="GLOBAL_FOCUS_SHORTCUT">Global focus shortcut:</label>
-      <input type="text" id="GLOBAL_FOCUS_SHORTCUT" autofocus placeholder="Shortcut" />
-      <label for="NOTE_FORMAT">Note format:</label>
-      <input type="text" id="NOTE_FORMAT" autofocus placeholder="{{date}} {{note}} {{newLine}}" />
-      <button id="cancel">Cancel</button>
-      <button id="save">Save</button>
+    <header>
+      <h1>Settings</h1>
+      <button id="cancel" tabindex="5">X</button>
+    </header>
+
+    <div class="settings">
+      <label for="NOTE_FORMAT">Note format</label>
+      <input type="text" id="NOTE_FORMAT" tabindex="1" placeholder="{{date}} {{note}} {{newLine}}" />
+      <label for="GLOBAL_FOCUS_SHORTCUT">Global focus shortcut</label>
+      <input type="text" id="GLOBAL_FOCUS_SHORTCUT" tabindex="2" placeholder="Shortcut" />
+      <label for="OBSIDIAN_VAULT_FILE">Obsidian vault file</label>
+      <input type="text" id="OBSIDIAN_VAULT_FILE" tabindex="3"  placeholder="File path" />
     </div>
+
+    <footer>
+      <button id="save" tabindex="4">Save</button>
+    </footer>
     <script src="./settings.js"></script>
   </body>
 </html>
