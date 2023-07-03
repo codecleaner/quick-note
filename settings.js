@@ -1,9 +1,9 @@
 document.getElementById('save').addEventListener('click', async () => {
-    const OBSIDIAN_VAULT_FILE = document.getElementById("OBSIDIAN_VAULT_FILE").value;
+    const NOTES_FILE = document.getElementById("NOTES_FILE").value;
     const GLOBAL_FOCUS_SHORTCUT = document.getElementById("GLOBAL_FOCUS_SHORTCUT").value;
     const NOTE_FORMAT = document.getElementById("NOTE_FORMAT").value;
 
-    const configuration = { OBSIDIAN_VAULT_FILE, GLOBAL_FOCUS_SHORTCUT, NOTE_FORMAT }
+    const configuration = { NOTES_FILE, GLOBAL_FOCUS_SHORTCUT, NOTE_FORMAT }
     await window.api.saveSettings(configuration).then(() => window.api.hideSettings());
 });
 

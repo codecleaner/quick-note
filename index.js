@@ -83,7 +83,7 @@ app.whenReady().then(async () => {
       .replaceAll("{{date}}", date)
       .replaceAll("{{note}}", noteContent)
       .replaceAll("{{newLine}}", `\n`);
-    fs.appendFileSync(store.get('OBSIDIAN_VAULT_FILE'), note);
+    fs.appendFileSync(store.get('NOTES_FILE'), note);
   });
 
   ipcMain.handle('hide-window', () => {
@@ -114,7 +114,7 @@ app.whenReady().then(async () => {
     console.log('save-settings');
     console.log(settings);
     saveNewGlobalFocusShortcut(settings.GLOBAL_FOCUS_SHORTCUT);
-    store.set('OBSIDIAN_VAULT_FILE', settings.OBSIDIAN_VAULT_FILE);
+    store.set('NOTES_FILE', settings.NOTES_FILE);
     store.set('NOTE_FORMAT', settings.NOTE_FORMAT);
   });
 
