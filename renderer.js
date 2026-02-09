@@ -2,9 +2,9 @@ const noteField = document.getElementById('note');
 
 // Konfiguracja
 const MIN_HEIGHT = 52; // Wysokość dla 1 linii (20px + 2*16px padding)
-const MAX_HEIGHT = 300; // Wysokość dla ~5 linii
+const MAX_HEIGHT = 140; // Wysokość dla ~5 linii
 const BASE_FONT_SIZE = 20;
-const MIN_FONT_SIZE = 10; // Minimalna czcionka gdy tekst jest bardzo długi
+const MIN_FONT_SIZE = 12; // Minimalna czcionka gdy tekst jest bardzo długi
 
 // Funkcja do auto-resize textarea i okna
 function autoResize() {
