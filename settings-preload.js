@@ -1,13 +1,10 @@
-const configuration = require('./configuration.json');
-const Store = require('electron-store');
 const { contextBridge, ipcRenderer } = require('electron');
 
-const store = new Store({ defaults: configuration });
-
-window.addEventListener('DOMContentLoaded', () => {
-    document.getElementById("NOTES_FILE").value = store.get("NOTES_FILE");
-    document.getElementById("GLOBAL_FOCUS_SHORTCUT").value = store.get("GLOBAL_FOCUS_SHORTCUT");
-    document.getElementById("NOTE_FORMAT").value = store.get("NOTE_FORMAT");
+window.addEventListener('DOMContentLoaded', async () => {
+    const settings = await ipcRenderer.invoke('get-settings');
+    document.getElementById("NOTES_FILE").value = settings.NOTES_FILE;
+    document.getElementById("GLOBAL_FOCUS_SHORTCUT").value = settings.GLOBAL_FOCUS_SHORTCUT;
+    document.getElementById("NOTE_FORMAT").value = settings.NOTE_FORMAT;
 });
 
 contextBridge.exposeInMainWorld('api', {

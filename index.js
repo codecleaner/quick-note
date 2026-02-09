@@ -25,6 +25,8 @@ const createMainWindow = () => {
     opacity: 0.95,
     skipTaskbar: true,
     webPreferences: {
+      contextIsolation: true,
+      nodeIntegration: false,
       preload: path.join(__dirname, "preload.js"),
     }
   });
@@ -43,7 +45,8 @@ const createSettingsWindow = (mainWindow) => {
     width: 482,
     height: 373,
     webPreferences: {
-      nodeIntegration: true,
+      contextIsolation: true,
+      nodeIntegration: false,
       preload: path.join(__dirname, 'settings-preload.js')
     }
   });
@@ -65,13 +68,17 @@ const registerGlobalFocusShortcut = mainWindow => {
 };
 
 app.whenReady().then(async () => {
-  const mainWindow = await createMainWindow();
-  const settingsWindow = await createSettingsWindow(mainWindow);
+  // Rejestracja IPC handlerów przed utworzeniem okien
+  let mainWindow, settingsWindow;
 
-  app.on('activate', function () {
-    if (BrowserWindow.getAllWindows().length === 0) createMainWindow()
-  })
-  registerGlobalFocusShortcut(mainWindow);
+  ipcMain.handle('get-settings', () => {
+    console.log('get-settings');
+    return {
+      NOTES_FILE: store.get('NOTES_FILE'),
+      GLOBAL_FOCUS_SHORTCUT: store.get('GLOBAL_FOCUS_SHORTCUT'),
+      NOTE_FORMAT: store.get('NOTE_FORMAT')
+    };
+  });
 
   ipcMain.handle('create-note', (event, noteContent) => {
     console.log('create-note', noteContent);
@@ -123,6 +130,15 @@ app.whenReady().then(async () => {
     settingsWindow.hide();
     mainWindow.show();
   });
+
+  // Tworzenie okien po zarejestrowaniu handlerów
+  mainWindow = await createMainWindow();
+  settingsWindow = await createSettingsWindow(mainWindow);
+
+  app.on('activate', function () {
+    if (BrowserWindow.getAllWindows().length === 0) createMainWindow()
+  })
+  registerGlobalFocusShortcut(mainWindow);
 });
 
 app.on('window-all-closed', function () {

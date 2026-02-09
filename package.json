@@ -2,27 +2,40 @@
   "name": "quick-note",
   "productName": "Quick Note",
   "version": "1.1.0",
-  "description": "A minimal quick note app",
+  "description": "Minimalistic quick note app with global keyboard shortcut for macOS",
   "main": "index.js",
   "scripts": {
     "start": "electron .",
     "start:debug": "DEBUG=true electron .",
-    "pack": "npx electron-packager . --icon=\"./assets/icons/mac/quick-note.icns\" --out=\"./build\" --overwrite"
+    "pack": "npx electron-packager . --icon=\"./assets/icons/mac/quick-note.icns\" --out=\"./build\" --overwrite",
+    "pack:all": "npx electron-packager . --icon=\"./assets/icons/mac/quick-note.icns\" --out=\"./build\" --overwrite --all",
+    "clean": "rm -rf build node_modules",
+    "reinstall": "npm run clean && npm install"
   },
   "keywords": [
     "quick",
-    "note"
+    "note",
+    "electron",
+    "productivity",
+    "notes",
+    "macos",
+    "global-shortcut",
+    "minimal"
   ],
   "author": {
     "name": "Wojtek Zieliński"
   },
-  "license": "MIT License",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/quick-note"
+  },
   "devDependencies": {
-    "electron": "22.1.0",
-    "electron-packager": "^17.1.1",
-    "jest": "^29.1.1"
+    "electron": "^33.4.0",
+    "electron-packager": "^17.1.2",
+    "jest": "^29.7.0"
   },
   "dependencies": {
-    "electron-store": "^8.1.0"
+    "electron-store": "^8.2.0"
   }
 }
