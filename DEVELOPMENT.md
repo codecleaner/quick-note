@@ -94,18 +94,22 @@ Konfiguracja przechowywana w `electron-store`:
 - Code signing - przy dystrybucji
 - Auto-update - mechanizm bezpiecznej aktualizacji
 
-## 📦 Alternatywy dla electron-packager
+## 📦 Build system
 
-### @electron/packager (recommended)
+### @electron/packager (obecnie używane)
+
+Projekt używa `@electron/packager` do budowania aplikacji:
+
 ```bash
 npm install --save-dev @electron/packager
 ```
-W package.json zmień:
+
+W package.json:
 ```json
 "pack": "npx @electron/packager . --icon=..."
 ```
 
-### electron-builder (najbardziej popularne)
+### electron-builder (alternatywa)
 ```bash
 npm install --save-dev electron-builder
 ```
