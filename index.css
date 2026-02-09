@@ -22,11 +22,31 @@ body {
     align-items: center;
     justify-content: center;
 }
-#drag-handle::before {
-    content: '⋮';
+.drag-indicator {
     color: rgba(0,0,0,0.3);
     font-size: 16px;
     user-select: none;
+    line-height: 1;
+}
+button#settings {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    font-size: 16px;
+    border: none;
+    margin: 0;
+    padding: 6px;
+    opacity: 0.5;
+    background-color: transparent;
+    -webkit-app-region: no-drag;
+    cursor: pointer;
+    z-index: 10;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+button#settings:hover {
+    opacity: 1;
+    background-color: rgba(255,255,255,0.9);
 }
 textarea {
     flex: 1;
@@ -36,7 +56,6 @@ textarea {
     min-height: 20px;
     max-height: 120px; /* ~5 linii przy font-size: 20px */
     padding: 16px;
-    padding-right: 40px; /* miejsce na przycisk settings */
     vertical-align: middle;
     color: #303030;
     resize: none;
@@ -49,21 +68,4 @@ textarea {
 }
 textarea:focus {
     outline: none;
-}
-button#settings {
-    position: absolute;
-    right: 8px;
-    top: 8px;
-    font-size: 12px;
-    border: none;
-    margin: 0;
-    padding: 4px;
-    opacity: 0.5;
-    background-color: transparent;
-    -webkit-app-region: no-drag;
-    cursor: pointer;
-    z-index: 10;
-}
-button#settings:hover {
-    opacity: 0.8;
 }
