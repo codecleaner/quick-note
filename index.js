@@ -14,7 +14,7 @@ const createMainWindow = () => {
     height: DEBUG_MODE ? 300 : 52,
     frame: false,
     alwaysOnTop: true,
-    resizable: !!DEBUG_MODE,
+    resizable: true,
     minimizable: false,
     maximizable: false,
     closable: false,
@@ -68,9 +68,10 @@ const registerGlobalFocusShortcut = mainWindow => {
 };
 
 app.whenReady().then(async () => {
-  // Rejestracja IPC handlerów przed utworzeniem okien
+  // Deklaracja zmiennych dla okien (będą dostępne w handlerach)
   let mainWindow, settingsWindow;
 
+  // Rejestracja IPC handlerów przed utworzeniem okien
   ipcMain.handle('get-settings', () => {
     console.log('get-settings');
     return {
@@ -101,6 +102,14 @@ app.whenReady().then(async () => {
   ipcMain.handle('center-window', () => {
     console.log('center-window');
     mainWindow.center();
+  });
+
+  ipcMain.handle('resize-window', (event, height) => {
+    console.log('resize-window', height);
+    if (mainWindow) {
+      const [width] = mainWindow.getSize();
+      mainWindow.setSize(width, height, true);
+    }
   });
 
   ipcMain.handle('show-settings', () => {

@@ -5,30 +5,65 @@ html {
 body {
     margin: 0;
     padding: 0;
-    -webkit-app-region: drag;
+    -webkit-app-region: no-drag;
+    position: relative;
+    display: flex;
 }
-input {
-    width: 580px;
+#drag-handle {
+    width: 24px;
+    min-height: 52px;
+    background: white;
+    border-radius: 10px 0 0 10px;
+    border-right: 1px solid rgba(0,0,0,0.1);
+    cursor: move;
+    -webkit-app-region: drag;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#drag-handle::before {
+    content: '⋮';
+    color: rgba(0,0,0,0.3);
+    font-size: 16px;
+    user-select: none;
+}
+textarea {
+    flex: 1;
     font-family: "Open Sans", sans-serif;
     font-size: 20px;
     border: none;
-    height: 20px;
+    min-height: 20px;
+    max-height: 120px; /* ~5 linii przy font-size: 20px */
     padding: 16px;
+    padding-right: 40px; /* miejsce na przycisk settings */
     vertical-align: middle;
     color: #303030;
+    resize: none;
+    overflow-y: auto;
+    line-height: 1.4;
+    box-sizing: border-box;
+    border-radius: 0 10px 10px 0; /* Zaokrąglone tylko po prawej */
+    display: block;
+    -webkit-app-region: no-drag; /* Umożliwia scrollowanie */
 }
-input:focus {
+textarea:focus {
     outline: none;
 }
 button#settings {
     position: absolute;
-    right: 4px;
-    font-size: 10px;
+    right: 8px;
+    top: 8px;
+    font-size: 12px;
     border: none;
     margin: 0;
-    padding: 0;
+    padding: 4px;
     opacity: 0.5;
     background-color: transparent;
     -webkit-app-region: no-drag;
     cursor: pointer;
+    z-index: 10;
+}
+button#settings:hover {
+    opacity: 0.8;
 }

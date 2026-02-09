@@ -9,4 +9,5 @@ contextBridge.exposeInMainWorld('api', {
   hideWindow: () => ipcRenderer.invoke('hide-window'),
   centerWindow: () => ipcRenderer.invoke('center-window'),
   showSettings: () => ipcRenderer.invoke('show-settings'),
+  resizeWindow: height => ipcRenderer.invoke('resize-window', height),
 });
