@@ -57,8 +57,34 @@ button#settings:hover {
     background-color: rgba(255,255,255,0.9);
 }
 
-textarea {
+/* Wrapper edytora */
+#note-wrapper {
     flex: 1;
+    position: relative;
+    border-radius: 0 10px 10px 0;
+    overflow: hidden;
+    background: white;
+}
+
+/* Backdrop — lustrzane odbicie tekstu ze stylowanymi tagami */
+#note-backdrop {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    font-family: "Open Sans", sans-serif;
+    font-size: 20px;
+    padding: 16px;
+    line-height: 1.4;
+    color: #303030;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-y: auto;
+    box-sizing: border-box;
+    pointer-events: none;
+}
+
+textarea {
+    position: relative;
+    width: 100%;
     font-family: "Open Sans", sans-serif;
     font-size: 20px;
     border: none;
@@ -66,18 +92,31 @@ textarea {
     max-height: 120px;
     padding: 16px;
     vertical-align: middle;
-    color: #303030;
+    color: transparent;
+    caret-color: #303030;
     resize: none;
     overflow-y: auto;
     line-height: 1.4;
     box-sizing: border-box;
-    border-radius: 0 10px 10px 0;
     display: block;
     -webkit-app-region: no-drag;
-    background: white;
+    background: transparent;
 }
 textarea:focus {
     outline: none;
+}
+textarea::placeholder {
+    color: #999;
+}
+
+/* Chip tagu */
+.tag-chip {
+    color: #0071e3;
+    background: rgba(0, 113, 227, 0.1);
+    border-radius: 4px;
+    padding: 1px 3px;
+    margin: -1px -3px;
+    display: inline;
 }
 
 /* Pływające okienko podpowiedzi tagów */

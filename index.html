@@ -13,7 +13,10 @@
         <div class="drag-indicator">⋮</div>
       </div>
       <button id="settings">⚙️</button>
-      <textarea id="note" tabindex="1" aria-label="Quick note" autofocus placeholder="My quick note..." rows="1"></textarea>
+      <div id="note-wrapper">
+        <div id="note-backdrop" aria-hidden="true"></div>
+        <textarea id="note" tabindex="1" aria-label="Quick note" autofocus placeholder="My quick note..." rows="1"></textarea>
+      </div>
     </div>
     <div id="tag-suggestions"></div>
     <script src="./renderer.js"></script>

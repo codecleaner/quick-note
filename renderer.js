@@ -1,5 +1,6 @@
 const noteField = document.getElementById('note');
 const tagSuggestions = document.getElementById('tag-suggestions');
+const backdrop = document.getElementById('note-backdrop');
 
 // Konfiguracja
 const MIN_HEIGHT = 52;
@@ -128,6 +129,7 @@ function selectTag(tag) {
     noteField.selectionStart = newPos;
     noteField.selectionEnd = newPos;
     hideSuggestions();
+    updateBackdrop();
     noteField.focus();
 }
 
@@ -140,6 +142,16 @@ function updateSuggestions() {
     );
     if (matches.length === 0) { hideSuggestions(); return; }
     showSuggestions(matches);
+}
+
+// --- Backdrop: podświetlanie tagów ---
+function updateBackdrop() {
+    let text = noteField.value;
+    // Escape HTML
+    text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    // Oznacz tagi chipami
+    text = text.replace(/(^|\s)(#\S+)/gm, '$1<span class="tag-chip">$2</span>');
+    backdrop.innerHTML = text + '\n';
 }
 
 // --- Rozmiar okna ---
@@ -155,6 +167,7 @@ function updateWindowSize() {
 // --- Auto-resize textarea ---
 function autoResize() {
     noteField.style.fontSize = BASE_FONT_SIZE + 'px';
+    backdrop.style.fontSize = BASE_FONT_SIZE + 'px';
     noteField.style.height = 'auto';
 
     let scrollHeight = noteField.scrollHeight;
@@ -164,6 +177,7 @@ function autoResize() {
         while (scrollHeight > MAX_HEIGHT && fontSize > MIN_FONT_SIZE) {
             fontSize -= 1;
             noteField.style.fontSize = fontSize + 'px';
+            backdrop.style.fontSize = fontSize + 'px';
             noteField.style.height = 'auto';
             scrollHeight = noteField.scrollHeight;
         }
@@ -178,7 +192,12 @@ function autoResize() {
 
 noteField.addEventListener('input', () => {
     autoResize();
+    updateBackdrop();
     updateSuggestions();
+});
+
+noteField.addEventListener('scroll', () => {
+    backdrop.scrollTop = noteField.scrollTop;
 });
 
 noteField.addEventListener('keydown', async (e) => {
@@ -216,6 +235,7 @@ noteField.addEventListener('keydown', async (e) => {
         if (content) {
             await window.api.createNote(content).then(() => {
                 noteField.value = '';
+                backdrop.innerHTML = '';
                 autoResize();
                 return window.api.hideWindow();
             });
@@ -235,6 +255,7 @@ document.body.addEventListener('keyup', async (e) => {
         }
         if (noteField.value.length > 0) {
             noteField.value = '';
+            backdrop.innerHTML = '';
             autoResize();
         } else {
             await window.api.hideWindow();
