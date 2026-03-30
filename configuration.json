@@ -1,5 +1,6 @@
 {
-  "NOTES_FILE": "",
+  "DEFAULT_NOTES_FILE": "",
+  "TAG_FILE_MAPPINGS": [],
   "GLOBAL_FOCUS_SHORTCUT": "Alt+Shift+Space",
   "NOTE_FORMAT": "- **{{date}}**: {{note}}{{newLine}}"
 }

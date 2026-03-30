@@ -10,4 +10,5 @@ contextBridge.exposeInMainWorld('api', {
   centerWindow: () => ipcRenderer.invoke('center-window'),
   showSettings: () => ipcRenderer.invoke('show-settings'),
   resizeWindow: height => ipcRenderer.invoke('resize-window', height),
+  getTagMappings: () => ipcRenderer.invoke('get-tag-mappings'),
 });

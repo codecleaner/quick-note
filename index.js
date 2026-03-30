@@ -1,4 +1,4 @@
-const { app, globalShortcut, BrowserWindow, ipcMain } = require('electron');
+const { app, globalShortcut, BrowserWindow, ipcMain, dialog } = require('electron');
 const configuration = require('./configuration.json');
 const fs = require('fs');
 const path = require('path');
@@ -7,6 +7,18 @@ const Store = require('electron-store');
 const DEBUG_MODE = process.env.DEBUG;
 
 const store = new Store({ defaults: configuration });
+
+// Migracja: stary klucz NOTES_FILE → DEFAULT_NOTES_FILE
+if (store.has('NOTES_FILE')) {
+  const oldFile = store.get('NOTES_FILE');
+  if (!store.get('DEFAULT_NOTES_FILE') && oldFile) {
+    store.set('DEFAULT_NOTES_FILE', oldFile);
+  }
+  store.delete('NOTES_FILE');
+}
+if (!store.has('TAG_FILE_MAPPINGS')) {
+  store.set('TAG_FILE_MAPPINGS', []);
+}
 
 const createMainWindow = () => {
   const mainWindow = new BrowserWindow({
@@ -42,8 +54,8 @@ const createSettingsWindow = (mainWindow) => {
     parent: mainWindow,
     modal: !DEBUG_MODE,
     show: false,
-    width: 482,
-    height: 373,
+    width: 540,
+    height: 520,
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,
@@ -75,23 +87,74 @@ app.whenReady().then(async () => {
   ipcMain.handle('get-settings', () => {
     console.log('get-settings');
     return {
-      NOTES_FILE: store.get('NOTES_FILE'),
+      DEFAULT_NOTES_FILE: store.get('DEFAULT_NOTES_FILE'),
+      TAG_FILE_MAPPINGS: store.get('TAG_FILE_MAPPINGS'),
       GLOBAL_FOCUS_SHORTCUT: store.get('GLOBAL_FOCUS_SHORTCUT'),
       NOTE_FORMAT: store.get('NOTE_FORMAT')
     };
   });
 
+  ipcMain.handle('get-tag-mappings', () => {
+    return store.get('TAG_FILE_MAPPINGS') || [];
+  });
+
   ipcMain.handle('create-note', (event, noteContent) => {
     console.log('create-note', noteContent);
+
+    // Routing po tagach: wyciągnij hashtagi z treści
+    const tagRegex = /(?:^|\s)#(\S+)/g;
+    const foundTags = [];
+    let match;
+    while ((match = tagRegex.exec(noteContent)) !== null) {
+      foundTags.push(match[1].toLowerCase());
+    }
+
+    const mappings = store.get('TAG_FILE_MAPPINGS') || [];
+    const targetFiles = new Set();
+    const matchedTagNames = new Set();
+
+    // Dopasuj tagi do mapowań
+    for (const tag of foundTags) {
+      for (const mapping of mappings) {
+        if (mapping.tag && mapping.file && mapping.tag.toLowerCase() === tag) {
+          targetFiles.add(mapping.file);
+          matchedTagNames.add(tag);
+        }
+      }
+    }
+
+    // Jeśli brak dopasowań — zapisz do domyślnego pliku
+    if (targetFiles.size === 0) {
+      const defaultFile = store.get('DEFAULT_NOTES_FILE');
+      if (defaultFile) {
+        targetFiles.add(defaultFile);
+      }
+    }
+
+    // Usuń dopasowane tagi z treści notatki
+    let cleanContent = noteContent;
+    for (const tag of matchedTagNames) {
+      const escaped = tag.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      cleanContent = cleanContent.replace(new RegExp(`\\s*#${escaped}(?=\\s|$)`, 'gi'), '');
+    }
+    cleanContent = cleanContent.trim();
+
+    // Nie zapisuj jeśli treść jest pusta po usunięciu tagów
+    if (!cleanContent) return;
+
     const date = new Intl.DateTimeFormat('pl-PL', {
       dateStyle: 'short',
       timeStyle: 'short'
-    }).format(new Date())
+    }).format(new Date());
     const note = store.get('NOTE_FORMAT')
       .replaceAll("{{date}}", date)
-      .replaceAll("{{note}}", noteContent)
+      .replaceAll("{{note}}", cleanContent)
       .replaceAll("{{newLine}}", `\n`);
-    fs.appendFileSync(store.get('NOTES_FILE'), note);
+
+    // Zapisz do każdego dopasowanego pliku
+    for (const file of targetFiles) {
+      fs.appendFileSync(file, note);
+    }
   });
 
   ipcMain.handle('hide-window', () => {
@@ -117,6 +180,21 @@ app.whenReady().then(async () => {
     settingsWindow.show();
   });
 
+  ipcMain.handle('select-file', async () => {
+    const result = await dialog.showOpenDialog(settingsWindow, {
+      properties: ['openFile', 'createDirectory'],
+      filters: [
+        { name: 'Markdown', extensions: ['md'] },
+        { name: 'Text', extensions: ['txt'] },
+        { name: 'All Files', extensions: ['*'] }
+      ]
+    });
+    if (result.canceled || result.filePaths.length === 0) {
+      return null;
+    }
+    return result.filePaths[0];
+  });
+
   const saveNewGlobalFocusShortcut = newGlobalFocusShortcut => {
     const oldGlobalFocusShortcut = store.get('GLOBAL_FOCUS_SHORTCUT');
     if (newGlobalFocusShortcut !== oldGlobalFocusShortcut) {
@@ -130,7 +208,8 @@ app.whenReady().then(async () => {
     console.log('save-settings');
     console.log(settings);
     saveNewGlobalFocusShortcut(settings.GLOBAL_FOCUS_SHORTCUT);
-    store.set('NOTES_FILE', settings.NOTES_FILE);
+    store.set('DEFAULT_NOTES_FILE', settings.DEFAULT_NOTES_FILE);
+    store.set('TAG_FILE_MAPPINGS', settings.TAG_FILE_MAPPINGS);
     store.set('NOTE_FORMAT', settings.NOTE_FORMAT);
   });
 
