@@ -51,16 +51,28 @@ const createMainWindow = () => {
 
 const createSettingsWindow = (mainWindow) => {
   const settingsWindow = new BrowserWindow({
-    parent: mainWindow,
-    modal: !DEBUG_MODE,
     show: false,
     width: 540,
-    height: 520,
+    height: 460,
+    minHeight: 300,
+    minWidth: 400,
+    title: 'Quick Note Settings',
+    titleBarStyle: 'hidden',
+    trafficLightPosition: { x: 14, y: 14 },
+    resizable: true,
+    minimizable: false,
+    maximizable: false,
+    fullscreenable: false,
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,
       preload: path.join(__dirname, 'settings-preload.js')
     }
+  });
+  settingsWindow.on('close', (e) => {
+    e.preventDefault();
+    settingsWindow.hide();
+    mainWindow.setAlwaysOnTop(true);
   });
   return settingsWindow.loadFile('settings.html').then(() => {
     DEBUG_MODE && settingsWindow.webContents.openDevTools();
@@ -177,7 +189,9 @@ app.whenReady().then(async () => {
 
   ipcMain.handle('show-settings', () => {
     console.log('show-settings');
+    mainWindow.setAlwaysOnTop(false);
     settingsWindow.show();
+    settingsWindow.focus();
   });
 
   ipcMain.handle('select-file', async () => {
@@ -216,7 +230,7 @@ app.whenReady().then(async () => {
   ipcMain.handle('hide-settings', () => {
     console.log('hide-settings');
     settingsWindow.hide();
-    mainWindow.show();
+    mainWindow.setAlwaysOnTop(true);
   });
 
   // Tworzenie okien po zarejestrowaniu handlerów

@@ -7,48 +7,52 @@
     <link rel="stylesheet" type="text/css" href="settings.css" />
   </head>
   <body>
-    <header>
-      <h1>⚙️ Settings</h1>
-      <button id="cancel" tabindex="99" title="Close">✕</button>
-    </header>
+    <div class="titlebar">
+      <nav class="tab-bar">
+        <button class="tab active" data-tab="general">General</button>
+        <button class="tab" data-tab="files">Files</button>
+      </nav>
+    </div>
 
-    <div class="card">
-      <h2>General</h2>
-      <div class="field">
-        <label for="NOTE_FORMAT">Note format</label>
-        <input type="text" id="NOTE_FORMAT" tabindex="1" placeholder="{{date}} {{note}} {{newLine}}" />
-        <span class="hint">Available: {{date}}, {{note}}, {{newLine}}</span>
+    <div class="content">
+      <div class="tab-panel active" id="panel-general">
+        <div class="card">
+          <div class="field">
+            <label for="NOTE_FORMAT">Note format</label>
+            <input type="text" id="NOTE_FORMAT" tabindex="1" placeholder="{{date}} {{note}} {{newLine}}" />
+            <span class="hint">Available: {{date}}, {{note}}, {{newLine}}</span>
+          </div>
+          <div class="field">
+            <label for="GLOBAL_FOCUS_SHORTCUT">Global focus shortcut</label>
+            <input type="text" id="GLOBAL_FOCUS_SHORTCUT" tabindex="2" placeholder="e.g. Alt+Shift+Space" />
+          </div>
+        </div>
       </div>
-      <div class="field">
-        <label for="GLOBAL_FOCUS_SHORTCUT">Global focus shortcut</label>
-        <input type="text" id="GLOBAL_FOCUS_SHORTCUT" tabindex="2" placeholder="e.g. Alt+Shift+Space" />
+
+      <div class="tab-panel" id="panel-files">
+        <div class="card">
+          <div class="field">
+            <label>Default notes file</label>
+            <div class="file-row">
+              <span class="file-path-display" id="default-file-display" title="">No file selected</span>
+              <button type="button" class="icon-btn" id="browse-default" tabindex="3" title="Browse…">📂</button>
+            </div>
+            <input type="hidden" id="DEFAULT_NOTES_FILE" />
+            <span class="hint">Used when no tag matches</span>
+          </div>
+
+          <div class="tag-mappings-section">
+            <div class="tag-mappings-header">
+              <label>Tag → File mappings</label>
+              <button id="add-mapping" type="button" tabindex="4" title="Add mapping">+ Add</button>
+            </div>
+            <div class="tag-mappings-hint">Use <strong>#tag</strong> in your note to route it to a specific file</div>
+            <div id="tag-mappings-list"></div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="card">
-      <h2>Files</h2>
-      <div class="field">
-        <label for="DEFAULT_NOTES_FILE">Default notes file</label>
-        <div class="file-row">
-          <input type="text" id="DEFAULT_NOTES_FILE" tabindex="3" placeholder="/path/to/notes.md" />
-          <button type="button" class="browse-btn" id="browse-default" tabindex="4" title="Browse…">📂</button>
-        </div>
-        <span class="hint">Used when no tag matches</span>
-      </div>
-
-      <div class="tag-mappings-section">
-        <div class="tag-mappings-header">
-          <label>Tag → File mappings</label>
-          <button id="add-mapping" type="button" tabindex="4" title="Add mapping">+ Add</button>
-        </div>
-        <div class="tag-mappings-hint">Use <strong>#tag</strong> in your note to route it to a specific file</div>
-        <div id="tag-mappings-list"></div>
-      </div>
-    </div>
-
-    <footer>
-      <button id="save" tabindex="90">Save</button>
-    </footer>
     <script src="./settings.js"></script>
   </body>
 </html>
