@@ -1,5 +1,9 @@
 // --- Ładowanie ustawień ---
+let isDialogOpen = false;
+
 async function loadSettings() {
+    if (isDialogOpen) return;
+
     const settings = await window.api.getSettings();
     document.getElementById("DEFAULT_NOTES_FILE").value = settings.DEFAULT_NOTES_FILE || '';
     document.getElementById("GLOBAL_FOCUS_SHORTCUT").value = settings.GLOBAL_FOCUS_SHORTCUT || '';
@@ -64,8 +68,13 @@ function addMappingRow(tag = '', file = '') {
     browseBtn.textContent = '📂';
     browseBtn.title = 'Browse…';
     browseBtn.addEventListener('click', async () => {
-        const filePath = await window.api.selectFile();
-        if (filePath) fileInput.value = filePath;
+        isDialogOpen = true;
+        try {
+            const filePath = await window.api.selectFile();
+            if (filePath) fileInput.value = filePath;
+        } finally {
+            isDialogOpen = false;
+        }
     });
 
     row.appendChild(tagInput);
@@ -105,8 +114,13 @@ document.getElementById('add-mapping').addEventListener('click', () => {
 });
 
 document.getElementById('browse-default').addEventListener('click', async () => {
-    const filePath = await window.api.selectFile();
-    if (filePath) document.getElementById('DEFAULT_NOTES_FILE').value = filePath;
+    isDialogOpen = true;
+    try {
+        const filePath = await window.api.selectFile();
+        if (filePath) document.getElementById('DEFAULT_NOTES_FILE').value = filePath;
+    } finally {
+        isDialogOpen = false;
+    }
 });
 
 document.getElementById('save').addEventListener('click', async () => {
