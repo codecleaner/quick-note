@@ -148,6 +148,45 @@ Przykładowa konfiguracja w package.json:
 }
 ```
 
+## 🚢 Publikacja nowej wersji
+
+> **🤖 Sekcja dla AI agenta:** Gdy użytkownik mówi "opublikuj nową wersję", "release", "zbuduj i zainstaluj" itp., wykonaj poniższe kroki automatycznie, w podanej kolejności.
+
+### Kroki
+
+1. **Zamknij wszystkie instancje Quick Note**
+   ```bash
+   pkill -f "Quick Note" 2>/dev/null; pkill -f "electron" 2>/dev/null
+   ```
+
+2. **Commituj zmiany i wypchnij na remote**
+   ```bash
+   git add -A
+   git commit -m "opis zmian"
+   git push
+   ```
+
+3. **Zbuduj paczkę**
+   ```bash
+   npm run pack
+   ```
+   Wynik: `build/Quick Note-darwin-arm64/Quick Note.app`
+
+4. **Zainstaluj w /Applications (podmień istniejącą wersję)**
+   ```bash
+   sudo rm -rf "/Applications/Quick Note.app"
+   sudo cp -R "./build/Quick Note-darwin-arm64/Quick Note.app" "/Applications/Quick Note.app"
+   ```
+
+### Skrót: `npm run release`
+
+Cały proces (build + instalacja) jest dostępny jako jeden skrypt:
+```bash
+npm run release
+```
+> **Uwaga:** Skrypt wymaga `sudo` — poprosi o hasło przy kopiowaniu do `/Applications`.
+> Git commit i push trzeba wykonać osobno przed uruchomieniem tego skryptu.
+
 ## 🧪 Testowanie
 
 Jest jest już w devDependencies, ale brak testów. Przykładowa struktura:

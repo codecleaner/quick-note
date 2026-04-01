@@ -9,6 +9,7 @@
     "start:debug": "DEBUG=true electron .",
     "pack": "npx @electron/packager . --icon=\"./assets/icons/mac/quick-note.icns\" --out=\"./build\" --overwrite",
     "pack:all": "npx @electron/packager . --icon=\"./assets/icons/mac/quick-note.icns\" --out=\"./build\" --overwrite --all",
+    "release": "npm run pack && sudo rm -rf '/Applications/Quick Note.app' && sudo cp -R './build/Quick Note-darwin-arm64/Quick Note.app' '/Applications/Quick Note.app' && echo '✅ Quick Note zainstalowany w /Applications'",
     "clean": "rm -rf build node_modules",
     "reinstall": "npm run clean && npm install"
   },
